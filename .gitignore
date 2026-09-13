@@ -1,6 +1,10 @@
 php.local.ini
 .php-version
 
+###> IDE ###
+/.idea/
+###< IDE ###
+
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
