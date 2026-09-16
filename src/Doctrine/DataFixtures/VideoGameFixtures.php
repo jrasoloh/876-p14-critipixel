@@ -15,6 +15,7 @@ use Doctrine\Persistence\ObjectManager;
 use Faker\Generator;
 
 use function array_fill_callback;
+use function array_filter;
 use function array_walk;
 use function in_array;
 use function min;
@@ -29,6 +30,31 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
      */
     private const VIDEO_GAME_INDEXES_WITHOUT_REVIEWS = [2, 3, 4, 5, 6, 7, 8];
 
+    /**
+     * Ces tags sont réservés aux tests fonctionnels de filtrage (FilterTest) :
+     * ils ne sont jamais assignés aléatoirement, mais uniquement de façon
+     * déterministe (voir RESERVED_TAG_ASSIGNMENTS) afin de garantir des
+     * comptes exacts et reproductibles.
+     */
+    private const RESERVED_TAG_NAMES = ['Action', 'Aventure', 'RPG'];
+
+    /**
+     * Assignation déterministe des tags réservés à certains jeux vidéo (par index).
+     * Comptes attendus :
+     *  - Action                    : jeux 40, 41, 42, 44  => 4 jeux
+     *  - Aventure                  : jeux 42, 43, 44      => 3 jeux
+     *  - RPG                       : jeu  44              => 1 jeu
+     *  - Action + Aventure         : jeux 42, 44          => 2 jeux
+     *  - Action + Aventure + RPG   : jeu  44              => 1 jeu
+     */
+    private const RESERVED_TAG_ASSIGNMENTS = [
+        40 => ['Action'],
+        41 => ['Action'],
+        42 => ['Action', 'Aventure'],
+        43 => ['Aventure'],
+        44 => ['Action', 'Aventure', 'RPG'],
+    ];
+
     public function __construct(
         private readonly Generator $faker,
         private readonly CalculateAverageRating $calculateAverageRating,
@@ -41,6 +67,20 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
         $users = $manager->getRepository(User::class)->findAll();
         $tags = $manager->getRepository(Tag::class)->findAll();
 
+        // Index des tags par nom pour l'assignation déterministe.
+        $tagsByName = [];
+        foreach ($tags as $tag) {
+            $tagsByName[$tag->getName()] = $tag;
+        }
+
+        // Les tags réservés sont exclus du tirage aléatoire afin que leurs
+        // comptes restent parfaitement maîtrisés pour les tests.
+        $randomTagPool = array_filter(
+            $tags,
+            static fn (Tag $tag): bool => !in_array($tag->getName(), self::RESERVED_TAG_NAMES, true)
+        );
+        $randomTagPool = array_values($randomTagPool);
+
         $videoGames = array_fill_callback(0, 50, fn (int $index): VideoGame => (new VideoGame)
             ->setTitle(sprintf('Jeu vidéo %d', $index))
             ->setDescription($this->faker->paragraphs(10, true))
@@ -51,11 +91,16 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
             ->setImageSize(2_098_872)
         );
 
-        foreach ($videoGames as $videoGame) {
-            $selectedTags = $this->faker->randomElements($tags, $this->faker->numberBetween(1, 4));
+        foreach ($videoGames as $index => $videoGame) {
+            $selectedTags = $this->faker->randomElements($randomTagPool, $this->faker->numberBetween(1, 4));
 
             foreach ($selectedTags as $tag) {
                 $videoGame->getTags()->add($tag);
+            }
+
+            // Assignation déterministe des tags réservés (pour les tests de filtrage).
+            foreach (self::RESERVED_TAG_ASSIGNMENTS[$index] ?? [] as $reservedTagName) {
+                $videoGame->getTags()->add($tagsByName[$reservedTagName]);
             }
         }
 

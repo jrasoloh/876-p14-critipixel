@@ -7,6 +7,10 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/)
 ## [Non publié]
 
 ### Ajouté
+- Test fonctionnel `FilterTest` complété pour couvrir le filtrage des jeux vidéo par tags :
+  - Filtrage par un seul tag, par plusieurs tags (sémantique ET : le jeu doit posséder tous les tags demandés) et sans aucun tag, via un `@dataProvider`.
+  - Cas d'un tag inexistant : le filtre est ignoré et la liste complète est retournée sans erreur.
+- Assignation **déterministe** de 3 tags réservés (`Action`, `Aventure`, `RPG`) dans `VideoGameFixtures`, exclus du tirage aléatoire, afin de garantir des comptes exacts et reproductibles pour les tests de filtrage.
 - Installation et configuration de [`DAMADoctrineTestBundle`](https://github.com/dmaicher/doctrine-test-bundle) : chaque test fonctionnel s'exécute désormais dans une transaction isolée automatiquement annulée à la fin du test (plus besoin de relancer les fixtures entre deux exécutions de la suite).
 - Test fonctionnel `ReviewTest` complété pour couvrir l'ensemble du cycle d'ajout d'un avis :
   - Cas nominal : ajout d'un avis (avec et sans commentaire), redirection 302, persistance en base vérifiée, formulaire masqué après un premier avis.
@@ -36,6 +40,7 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/)
 - Authentification (inscription / connexion).
 - Filtrage et tri de la liste des jeux vidéo.
 - Tests fonctionnels initiaux : connexion, inscription, filtrage, affichage d'un jeu vidéo.
+
 
 
 
