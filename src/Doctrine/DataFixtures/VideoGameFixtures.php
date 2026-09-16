@@ -27,7 +27,7 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
      * nombre précis d'avis (ex: ReviewTest). On ne leur ajoute donc pas d'avis
      * "aléatoires" via les fixtures pour ne pas casser ces assertions.
      */
-    private const VIDEO_GAME_INDEXES_WITHOUT_REVIEWS = [2, 3, 4];
+    private const VIDEO_GAME_INDEXES_WITHOUT_REVIEWS = [2, 3, 4, 5, 6, 7, 8];
 
     public function __construct(
         private readonly Generator $faker,
