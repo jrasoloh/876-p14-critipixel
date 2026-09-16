@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Twig\Components;
 
 use App\Model\Entity\VideoGame;
@@ -15,6 +17,7 @@ final class Progress
     public function getPercent(): int
     {
         $nbOfReviews = count($this->videoGame->getReviews());
-        return $nbOfReviews === 0 ? 0 : (int) round(($this->number / $nbOfReviews) * 100);
+
+        return 0 === $nbOfReviews ? 0 : (int) round(($this->number / $nbOfReviews) * 100);
     }
 }

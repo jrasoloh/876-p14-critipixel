@@ -76,4 +76,3 @@ final class VideoGameVoterTest extends TestCase
         return $token;
     }
 }
-

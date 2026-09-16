@@ -8,9 +8,6 @@ use App\Model\Entity\Tag;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-use function array_map;
-use function array_walk;
-
 final class TagFixtures extends Fixture
 {
     private const NAMES = [
@@ -33,14 +30,13 @@ final class TagFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $tags = array_map(
+        $tags = \array_map(
             static fn (string $name): Tag => (new Tag())->setName($name),
             self::NAMES
         );
 
-        array_walk($tags, [$manager, 'persist']);
+        \array_walk($tags, [$manager, 'persist']);
 
         $manager->flush();
     }
 }
-

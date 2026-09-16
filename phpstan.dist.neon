@@ -1,0 +1,19 @@
+parameters:
+    level: 6
+    paths:
+        - src
+        - tests
+    excludePaths:
+        # Fichiers d'amorçage (boilerplate framework), non pertinents pour l'analyse.
+        - tests/bootstrap.php
+        - tests/object-manager.php
+    # L'extension phpstan-symfony s'appuie sur le container compilé pour comprendre
+    # les services, l'autowiring, les contrôleurs, etc.
+    symfony:
+        containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
+    # L'extension phpstan-doctrine s'appuie sur l'EntityManager pour valider les
+    # requêtes DQL, les champs des entités, les repositories, etc.
+    doctrine:
+        objectManagerLoader: tests/object-manager.php
+
+
