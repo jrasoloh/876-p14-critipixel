@@ -99,6 +99,9 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
 
+      - name: Build SASS assets (required by base.html.twig)
+        run: php bin/console sass:build --env=test
+
       - name: Prepare test database (schema + fixtures)
         run: |
           php bin/console doctrine:database:drop -f --if-exists --env=test
@@ -108,4 +111,5 @@ jobs:
 
       - name: Run PHPUnit
         run: php bin/phpunit
+
 
