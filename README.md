@@ -106,6 +106,24 @@ composer cs-check
 composer cs-fix
 ```
 
+### Intégration continue (GitHub Actions)
+
+Le workflow `.github/workflows/ci.yml` est déclenché à chaque `push` et `pull_request` sur `main`. Il exécute deux jobs en parallèle :
+
+| Job       | Étapes                                                                                             |
+| --------- | -------------------------------------------------------------------------------------------------- |
+| `quality` | `composer install` (avec cache) → `composer phpstan` → `composer cs-check`                         |
+| `tests`   | Démarrage d'un service PostgreSQL 16, création de la base de test, migrations, fixtures, `bin/phpunit` |
+
+L'environnement est reproductible : PHP 8.2 (avec `ctype`, `iconv`, `intl`, `mbstring`, `pgsql`) installé via [`shivammathur/setup-php`](https://github.com/shivammathur/setup-php), et les dépendances Composer sont mises en cache d'un run à l'autre. Les runs obsolètes d'une même branche sont automatiquement annulés (`concurrency` + `cancel-in-progress`).
+
+Pour reproduire la CI en local :
+```bash
+composer phpstan
+composer cs-check
+composer test
+```
+
 ### Serveur web
 ```bash
 symfony serve

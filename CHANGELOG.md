@@ -7,6 +7,11 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/)
 ## [Non publié]
 
 ### Ajouté
+- **Intégration continue (GitHub Actions)** : ajout du workflow `.github/workflows/ci.yml` déclenché sur `push` et `pull_request` vers `main`.
+  - Job `quality` : installation des dépendances (avec cache Composer), puis `composer phpstan` (analyse statique niveau 6) et `composer cs-check` (vérification du style en dry-run).
+  - Job `tests` : service PostgreSQL 16 en conteneur, création de la base de test, migrations, chargement des fixtures, puis exécution de `bin/phpunit`.
+  - PHP 8.2 avec les extensions requises (`ctype`, `iconv`, `intl`, `mbstring`, `pgsql`) via `shivammathur/setup-php`.
+  - Annulation automatique des runs obsolètes sur une même branche (`concurrency` + `cancel-in-progress`).
 - **Analyse statique** : installation et configuration de [`PHPStan`](https://phpstan.org/) au niveau 6, avec ses extensions officielles Symfony, Doctrine et PHPUnit pour une compréhension fine du framework.
   - Configuration dans `phpstan.dist.neon` (paths `src/` + `tests/`, chargement du container Symfony compilé, chargement de l'`ObjectManager` Doctrine via `tests/object-manager.php`).
   - Nouveau script `composer phpstan`.
@@ -56,6 +61,7 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/)
 - Authentification (inscription / connexion).
 - Filtrage et tri de la liste des jeux vidéo.
 - Tests fonctionnels initiaux : connexion, inscription, filtrage, affichage d'un jeu vidéo.
+
 
 
 
