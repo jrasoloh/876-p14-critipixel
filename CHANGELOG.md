@@ -12,7 +12,7 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/)
 - Génération d'avis (`Review`) réalistes dans `VideoGameFixtures` : note (1 à 5), commentaire optionnel, entre 0 et 5 avis par jeu, un seul avis par utilisateur et par jeu.
 - Calcul cohérent de la moyenne (`averageRating`) et de la répartition des notes (`numberOfRatingsPerValue`) à partir des avis générés, via les services `CalculateAverageRating`/`CountRatingsPerValue` désormais utilisés dans les fixtures.
 - Les jeux vidéo d'index 2, 3 et 4 sont volontairement exclus de la génération d'avis aléatoires afin de ne pas perturber les assertions des tests fonctionnels existants (`ReviewTest`).
-- Tests unitaires pour `RatingHandler` (calcul de la moyenne, répartition des notes par valeur).
+- Tests unitaires dédiés `CalculateAverageRatingTest` et `CountRatingsPerValueTest` pour `RatingHandler` (calcul de la moyenne des notes et répartition des notes par valeur, sur plusieurs jeux vidéo avec des scénarios de notation variés).
 - Tests unitaires pour `VideoGameVoter` (droit de poster un avis selon l'utilisateur et ses avis existants).
 - Tests fonctionnels pour la soumission d'un avis (`ReviewTest`) : dépôt d'un avis, blocage d'un second avis, restriction aux utilisateurs connectés.
 - Fichier `CHANGELOG.md`.
@@ -29,6 +29,7 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/)
 - Authentification (inscription / connexion).
 - Filtrage et tri de la liste des jeux vidéo.
 - Tests fonctionnels initiaux : connexion, inscription, filtrage, affichage d'un jeu vidéo.
+
 
 
 
