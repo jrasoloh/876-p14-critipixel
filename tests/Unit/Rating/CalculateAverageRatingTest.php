@@ -65,6 +65,8 @@ final class CalculateAverageRatingTest extends TestCase
 
     /**
      * @dataProvider provideRatingsAndExpectedAverage
+     *
+     * @param int[] $ratings
      */
     public function testCalculateAverageShouldRoundUpToTheNearestInteger(array $ratings, int $expectedAverage): void
     {
@@ -75,6 +77,9 @@ final class CalculateAverageRatingTest extends TestCase
         self::assertSame($expectedAverage, $videoGame->getAverageRating());
     }
 
+    /**
+     * @return iterable<string, array{0: int[], 1: int}>
+     */
     public static function provideRatingsAndExpectedAverage(): iterable
     {
         yield 'single review' => [[4], 4];
@@ -84,6 +89,9 @@ final class CalculateAverageRatingTest extends TestCase
         yield 'all maximum ratings' => [[5, 5, 5], 5];
     }
 
+    /**
+     * @param int[] $ratings
+     */
     private function createVideoGameWithRatings(array $ratings): VideoGame
     {
         $videoGame = new VideoGame();
@@ -99,4 +107,3 @@ final class CalculateAverageRatingTest extends TestCase
         return $videoGame;
     }
 }
-

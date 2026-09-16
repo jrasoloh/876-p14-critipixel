@@ -73,6 +73,8 @@ final class CountRatingsPerValueTest extends TestCase
 
     /**
      * @dataProvider provideRatingsAndExpectedCounts
+     *
+     * @param int[] $ratings
      */
     public function testCountRatingsPerValueShouldCountEachRatingValue(
         array $ratings,
@@ -80,7 +82,7 @@ final class CountRatingsPerValueTest extends TestCase
         int $expectedTwo,
         int $expectedThree,
         int $expectedFour,
-        int $expectedFive
+        int $expectedFive,
     ): void {
         $videoGame = $this->createVideoGameWithRatings($ratings);
 
@@ -95,6 +97,9 @@ final class CountRatingsPerValueTest extends TestCase
         self::assertSame($expectedFive, $numberOfRatingsPerValue->getNumberOfFive());
     }
 
+    /**
+     * @return iterable<string, array{0: int[], 1: int, 2: int, 3: int, 4: int, 5: int}>
+     */
     public static function provideRatingsAndExpectedCounts(): iterable
     {
         yield 'single review' => [[3], 0, 0, 1, 0, 0];
@@ -102,6 +107,9 @@ final class CountRatingsPerValueTest extends TestCase
         yield 'mixed reviews' => [[1, 1, 2, 3, 3, 3, 4, 5, 5], 2, 1, 3, 1, 2];
     }
 
+    /**
+     * @param int[] $ratings
+     */
     private function createVideoGameWithRatings(array $ratings): VideoGame
     {
         $videoGame = new VideoGame();
@@ -117,4 +125,3 @@ final class CountRatingsPerValueTest extends TestCase
         return $videoGame;
     }
 }
-

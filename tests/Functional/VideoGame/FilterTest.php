@@ -7,8 +7,6 @@ namespace App\Tests\Functional\VideoGame;
 use App\Model\Entity\Tag;
 use App\Tests\Functional\FunctionalTestCase;
 
-use function array_map;
-
 final class FilterTest extends FunctionalTestCase
 {
     public function testShouldListTenVideoGames(): void
@@ -81,13 +79,14 @@ final class FilterTest extends FunctionalTestCase
 
     /**
      * @param string[] $tagNames
+     *
      * @return int[]
      */
     private function getTagIds(array $tagNames): array
     {
         $tagRepository = $this->getEntityManager()->getRepository(Tag::class);
 
-        return array_map(
+        return \array_map(
             static fn (string $name): int => $tagRepository->findOneBy(['name' => $name])->getId(),
             $tagNames
         );

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Doctrine\DataFixtures;
 
 use App\Model\Entity\Review;
@@ -8,18 +10,10 @@ use App\Model\Entity\User;
 use App\Model\Entity\VideoGame;
 use App\Rating\CalculateAverageRating;
 use App\Rating\CountRatingsPerValue;
-use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Generator;
-
-use function array_fill_callback;
-use function array_filter;
-use function array_walk;
-use function in_array;
-use function min;
-use function sprintf;
 
 final class VideoGameFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -45,7 +39,7 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
      *  - Aventure                  : jeux 42, 43, 44      => 3 jeux
      *  - RPG                       : jeu  44              => 1 jeu
      *  - Action + Aventure         : jeux 42, 44          => 2 jeux
-     *  - Action + Aventure + RPG   : jeu  44              => 1 jeu
+     *  - Action + Aventure + RPG   : jeu  44              => 1 jeu.
      */
     private const RESERVED_TAG_ASSIGNMENTS = [
         40 => ['Action'],
@@ -58,7 +52,7 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
     public function __construct(
         private readonly Generator $faker,
         private readonly CalculateAverageRating $calculateAverageRating,
-        private readonly CountRatingsPerValue $countRatingsPerValue
+        private readonly CountRatingsPerValue $countRatingsPerValue,
     ) {
     }
 
@@ -75,19 +69,22 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
 
         // Les tags réservés sont exclus du tirage aléatoire afin que leurs
         // comptes restent parfaitement maîtrisés pour les tests.
-        $randomTagPool = array_filter(
+        $randomTagPool = \array_filter(
             $tags,
-            static fn (Tag $tag): bool => !in_array($tag->getName(), self::RESERVED_TAG_NAMES, true)
+            static fn (Tag $tag): bool => !\in_array($tag->getName(), self::RESERVED_TAG_NAMES, true)
         );
         $randomTagPool = array_values($randomTagPool);
 
-        $videoGames = array_fill_callback(0, 50, fn (int $index): VideoGame => (new VideoGame)
-            ->setTitle(sprintf('Jeu vidéo %d', $index))
+        $videoGames = \array_fill_callback(
+            0,
+            50,
+            fn (int $index): VideoGame => (new VideoGame())
+            ->setTitle(\sprintf('Jeu vidéo %d', $index))
             ->setDescription($this->faker->paragraphs(10, true))
-            ->setReleaseDate(new DateTimeImmutable())
+            ->setReleaseDate(new \DateTimeImmutable())
             ->setTest($this->faker->paragraphs(6, true))
             ->setRating(($index % 5) + 1)
-            ->setImageName(sprintf('video_game_%d.png', $index))
+            ->setImageName(\sprintf('video_game_%d.png', $index))
             ->setImageSize(2_098_872)
         );
 
@@ -104,16 +101,18 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
             }
         }
 
-        array_walk($videoGames, [$manager, 'persist']);
+        foreach ($videoGames as $videoGame) {
+            $manager->persist($videoGame);
+        }
 
         $manager->flush();
 
         foreach ($videoGames as $index => $videoGame) {
-            if (in_array($index, self::VIDEO_GAME_INDEXES_WITHOUT_REVIEWS, true)) {
+            if (\in_array($index, self::VIDEO_GAME_INDEXES_WITHOUT_REVIEWS, true)) {
                 continue;
             }
 
-            $reviewers = $this->faker->randomElements($users, $this->faker->numberBetween(0, min(5, count($users))));
+            $reviewers = $this->faker->randomElements($users, $this->faker->numberBetween(0, \min(5, count($users))));
 
             foreach ($reviewers as $reviewer) {
                 $review = (new Review())

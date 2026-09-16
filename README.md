@@ -78,6 +78,34 @@ symfony php bin/phpunit
 
 *Note : Penser à charger les fixtures avant chaque éxécution des tests.*
 
+### Qualité du code
+
+Le projet utilise deux outils **complémentaires** d'analyse de la qualité du code :
+
+| Outil                                                | Rôle                                                          | Configuration            |
+| ---------------------------------------------------- | ------------------------------------------------------------- | ------------------------ |
+| [PHPStan](https://phpstan.org/)                      | Analyse statique du typage et détection de bugs potentiels    | `phpstan.dist.neon`      |
+| [PHP CS Fixer](https://cs.symfony.com/)              | Formatage / respect des standards de style (`@Symfony`, PSR-12) | `.php-cs-fixer.dist.php` |
+
+Les deux outils sont exécutés au niveau de rigueur suivant :
+- **PHPStan** : niveau **6** (typage strict des `array`, génériques, etc.) avec les extensions Symfony, Doctrine et PHPUnit.
+- **PHP CS Fixer** : règles `@Symfony`, `@PSR12`, `declare_strict_types`.
+
+#### Analyse statique (PHPStan)
+```bash
+composer phpstan
+```
+*Note : PHPStan a besoin du container Symfony compilé. Si vous obtenez une erreur `containerXmlPath`, lancez `symfony console cache:clear` au préalable.*
+
+#### Style de code (PHP CS Fixer)
+```bash
+# Vérification (dry-run) : liste les fichiers à corriger sans les modifier.
+composer cs-check
+
+# Correction automatique.
+composer cs-fix
+```
+
 ### Serveur web
 ```bash
 symfony serve

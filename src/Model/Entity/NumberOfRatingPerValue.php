@@ -24,7 +24,7 @@ class NumberOfRatingPerValue
 
     #[Column]
     private int $numberOfFive = 0;
-    
+
     public function clear(): void
     {
         $this->numberOfOne = 0;
