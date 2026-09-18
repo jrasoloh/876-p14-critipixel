@@ -35,7 +35,16 @@ DATABASE_URL=mysql://root:Password123!@host:3306/criti-pixel
 ### PHP (optionnel)
 Vous pouvez surcharger la configuration PHP en créant un fichier `php.local.ini`.
 
-De même pour la version de PHP que vous pouvez spécifier dans un fichier `.php-version`.
+La version de PHP à utiliser est épinglée à la racine du projet via le fichier
+[`.php-version`](.php-version) (actuellement **8.3**). Le binaire Symfony et
+[`phpenv`](https://github.com/phpenv/phpenv) / [Herd](https://herd.laravel.com/)
+le lisent automatiquement.
+
+> ⚠️ Les dépendances Symfony 6.4 utilisées ici (`twig/twig`, `vich/uploader-bundle`,
+> etc.) ne sont pas entièrement compatibles PHP 8.4 : plusieurs `Deprecated` sont
+> émis à l'exécution, ce qui casse la session (`session_id(): headers already sent`)
+> et provoque un 500. **Restez sur PHP 8.2 ou 8.3** tant que ces libs n'ont pas
+> publié de release compatible 8.4.
 
 ## Usage
 
