@@ -7,6 +7,13 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/)
 ## [Non publié]
 
 ### Ajouté
+- **Épinglage de la version PHP** : ajout d'un fichier `.php-version` (contenu : `8.3`)
+  à la racine du projet et retrait de ce fichier du `.gitignore`. Sur les machines
+  disposant de plusieurs versions PHP (8.2, 8.3, 8.4…), le binaire Symfony
+  sélectionne désormais automatiquement PHP 8.3 pour ce projet, ce qui évite un
+  crash 500 (`session_id(): headers already sent`) causé par la cascade de
+  `Deprecated` que PHP 8.4 émet sur les dépendances Symfony 6.4 (`twig/twig`,
+  `vich/uploader-bundle`, etc.) actuellement non compatibles PHP 8.4.
 - **Intégration continue (GitHub Actions)** : ajout du workflow `.github/workflows/ci.yml` déclenché sur `push` et `pull_request` vers `main`.
   - Job `quality` : installation des dépendances (avec cache Composer), puis `composer phpstan` (analyse statique niveau 6) et `composer cs-check` (vérification du style en dry-run).
   - Job `tests` : service PostgreSQL 16 en conteneur, création de la base de test, migrations, chargement des fixtures, puis exécution de `bin/phpunit`.
